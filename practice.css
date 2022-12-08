@@ -1,0 +1,46 @@
+/*<h3> 테스트1 <h3>*/
+
+h3{
+    font-size: 20px;
+
+    font-family: sans-serif;
+
+    color: blue;
+
+    background-color: yellow;
+
+    text-align: center;
+}
+
+/*
+
+폰트 사이즈
+
+글꼴
+
+폰트 색깔
+
+배경색
+
+텍스트 정렬
+
+*/
+
+/* nav태그의 자식 ul태그, ul 태그의 자식 li태그 */
+
+nav ul li{
+    background-color : violet;
+}
+
+/* <p class="address">주소: 대전광역시 유성구 문지로 193 KAIST</p> */
+
+.address{
+    color: blue;
+}
+
+/* <p id="number">사업자등록번호: 000-00-00000 | 대표: 정연준</p> */
+
+#number{
+    color: violet;
+}
+

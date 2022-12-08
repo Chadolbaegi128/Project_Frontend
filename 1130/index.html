@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>WEB</title>
+        <script type="text/javascript" src="script.js"></script>
+        <style>
+            html{
+                filter : invert(10%);
+                background-color: white;
+            }
+            h1{
+                border-bottom: 1px solid gray;
+                padding: 20px;
+                margin-bottom: 0;                
+            }
+            h1>a{
+                text-decoration: none;
+            }            
+            @media (min-width:600px){
+                #container{
+                display: grid;
+                grid-template-columns: 100px 1fr;
+                }
+                ol{
+                    border-right: 1px solid gray;
+                    margin-top: 0;
+                }
+            }
+            /*Media Query=>최소 가로 길이가 600px이상일 때 해당 속성 적용*/
+            /* 'container'id를 가진 div태그의 자식 태그들 중 ol태그는 100px, div태그는 나머지를 차지한다.*/
+        </style>
+    <head>
+    <body>
+        <h1><a href=".../index1.html">WEB!</a></h1>
+        <div id="container">
+            <ol>
+                <li><a href="1.html"></a></li>
+                <li><a href="2.html"></a></li>
+                <li><a href="3.html"></a></li>
+            </ol>
+            <div>
+                <h2>Welcome</h2>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto deleniti exercitationem accusantium omnis. Inventore impedit explicabo aliquid, ducimus eius hic esse consectetur recusandae rerum eum alias a, iusto, repudiandae commodi.
+            </div>
+        </div>        
+    </body>
+</html>

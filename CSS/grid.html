@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <style>
+            div{
+                border : 5px solid green;
+            }
+            #container{
+                display: grid;
+                grid-template-columns: 1fr 2fr 1fr;
+            }
+            /* 1fr 2fr 1fr => fr은 분수를 뜻하는 'fraction'의 약자이고 1:2:1을 의미한다.*/
+        </style>
+    </head>
+    <body>
+        <div>TOP</div>
+        <div id="container">
+            <div>LEFT</div>
+            <div>CENTER</div>
+            <div>RIGHT</div>
+        </div>
+        <div>BOTTOM</div>
+    </body>
+</html>
