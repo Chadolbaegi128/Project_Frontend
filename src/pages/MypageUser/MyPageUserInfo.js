@@ -49,6 +49,10 @@ const Input = styled.input`
     width: 430px;
     float: left;
     border-width: 0 0 1px 0;
+
+    ::placeholder{
+        color: black;
+    }
 `;
 
 const Form = styled.form`
@@ -58,53 +62,6 @@ const Form = styled.form`
     width: 500px;
     margin-top: 20px;
 `;
-
-const Address = styled.input`
-    position: relative;
-    left: 20px;
-    width: 330px;
-    padding: 5px;
-    margin-top: 5px;    
-    border-width: 1px;    
-`;
-
-const Address2 = styled.input`
-    position: relative;
-    left: 20px;
-    width: 437px;
-    padding: 5px;
-    margin-top: 5px;    
-    border-width: 1px;    
-`;
-
-const AddressButton = styled.button`
-    position: relative;
-    top: 1px;
-    left: 25px;
-    width: 100px;
-    padding: 4px;
-    margin-left: 2px;
-    font-size: 14px;
-    background-color: white;
-    border-width: 1px; 
-    color: #bcbcbc;
-    cursor: pointer;
-`;
-
-const InputButton = styled.button`
-    position: relative;
-    left: -51px;
-    top: 12px;
-    font-family: Arial;
-    font-size: 1rem;
-    color: white;
-    border: 1px solid white;
-    cursor: pointer;
-    background-color: grey;
-    width: 50px;
-    height: 25px;
-    border-radius: 10px;
-`
 
 const Button = styled.button`
     padding: 10px 160px;
@@ -146,7 +103,6 @@ const LinkToDelete = styled(Link)`
     position: relative;
     left: 100px;
     font-family: Arial;
-    text-decoration: none;
     &:link{
     color: grey;
     }
@@ -159,16 +115,91 @@ styled.div`
     align-items: center;
 `;
 
-
 const MyPageUserInfo = () => {
-    const [email, setEmail] = useState("");
-    const [name, setName] = useState("");
-    const [password, setPassword] = useState("");
-    const [phone, setPhone] = useState("");
+    const [inputs, setInputs] = useState({
+        userEmail: '',
+        userName: '',
+        userPW: '',
+        userPhone: '',
+        userAddress: '',
+    })
+    let regEmail =  /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i
+    let regPassword = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,16}$/; // 영문 숫자 포함 8~ 16자리
+    let regfullName = /^[가-힣a-zA-Z]*$/;
+    let regPhone = /^[0-9]{2,3}-[0-9]{3,4}-[0-9]{3,4}$/;
+    let regAddress = /^[가-힣a-zA-Z]*$/; 
 
-    const handleSubmit = (event) => {
+    const handleSubmit = (event) =>{
         event.preventDefault();
         // Perform submit logic here
+    }
+
+    const handleChange = (event) => {
+        event.preventDefault();
+        const {name, value} = event.target;
+        const nextInputs = { ...inputs, [name]: value,};
+        setInputs(nextInputs);
+    }
+
+    const checkEmail = (str) => {
+        return(regEmail.test(str));
+    }
+
+    const checkName = (str) => {
+        return(regfullName.test(str));
+    }
+
+    const checkPass = (str) => {
+        return(regPassword.test(str));
+    }
+
+    const checkPhone = (str) => {
+        return(regPhone.test(str));
+    }
+
+    const checkAddress = (str) => {
+        return(regAddress.test(str));
+    }
+
+    const userInfoHandler = async () => {
+        if(checkEmail(inputs.userEmail) === false || inputs.userEmail === ""){
+            alert("이메일을 입력해주세요!");
+            return;
+        }else if(checkName(inputs.userName) === false || inputs.userName === ""){
+            alert("이름을 입력해주세요!");
+            return;
+        }else if(checkPass(inputs.userPW) === false || inputs.userPW === ""){
+            alert("비밀번호는 영문 숫자 포함 8~ 16자리를 조합하여 입력해주세요!");
+            return;
+        }else if(checkPhone(inputs.userPhone) === false || inputs.userPhone === ""){
+            alert("전화번호 양식에 맞춰 입력해주세요!");
+            return;
+        }else if(checkAddress(inputs.userAddress === false) || inputs.userAddress === ""){
+            alert("주소를 다시 입력해주세요!");
+            return;
+        }else{            
+            try{
+                    const response =await fetch('https://fakestoreapi.com/users/1', {
+                    method: "PUT",
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    body:JSON.stringify(
+                        {
+                            email: inputs.userEmail,
+                            name: inputs.userName,
+                            password: inputs.userPW,
+                            phone: inputs.userPhone,
+                            address: inputs.userAddress
+                        }),
+                })
+                const response2 = await response.json();
+                console.log(response2);
+                return response2; 
+            } catch (err){
+                alert("다시 시도해주세요!");
+            }
+        }
     }
 
     return (
@@ -180,53 +211,49 @@ const MyPageUserInfo = () => {
                         <Item>Email</Item>
                         <ItemBox>
                             <Input 
-                            type="email"
-                            value={email}
-                            onChange={ event => setEmail(event.target.value) }
-                            placeholder="your@email.com"/>
-                        <InputButton>Edit</InputButton>
-                        </ItemBox>                          
+                            type="text"
+                            name="email"
+                            onChange={handleChange}
+                            placeholder="your@email.com" />
+                        </ItemBox>                         
                         <Item>Name</Item>
                         <ItemBox>
                             <Input 
                             type="name"
-                            value={name}
-                            onChange={ event => setName(event.target.value) }
-                            placeholder="Hong Gildong"/>
-                            <InputButton>Edit</InputButton>                        
+                            name="name"
+                            onChange={handleChange}
+                            placeholder="Hong Gildong"/>                        
                         </ItemBox>                        
                         <Item>Password</Item>
                         <ItemBox>
                             <Input 
                                 type="password"
-                                value={password}
-                                onChange={ event => setPassword(event.target.value) }
+                                name="password"
+                                onChange={handleChange}
                                 placeholder="q1w2e3"/>
-                            <InputButton>Edit</InputButton> 
                         </ItemBox>                        
                         <Item>Phone Number</Item>
                         <ItemBox>
                             <Input 
                                 type="phone"
-                                value={phone}
-                                onChange={ event => setPhone(event.target.value )}
-                                placeholder="010-1234-5678"/>
-                            <InputButton>Edit</InputButton>
+                                name="phone"
+                                onChange={handleChange}
+                                placeholder="010-1234-5678" maxlength="13"/>
                         </ItemBox>                        
                         <Item>Address</Item>
-                        <div>
-                            <Address 
-                                type="address1"
-                                placeholder="주소 찾기를 클릭해주세요."/>
-                            <AddressButton>주소찾기</AddressButton>
-                            <Address2 type="address2" />
-                        </div>
-                        <Button type="submit">Save</Button>
+                        <ItemBox>
+                            <Input 
+                            type="address"
+                            name="address"
+                            onChange={handleChange}
+                            placeholder="서울특별시 엘리스구 엘리스동 엘리스맨션 106호"/>
+                        </ItemBox>                        
+                        <Button type="submit" onClick={userInfoHandler} >Save</Button>
                     </Form>
                 </Container>                
                 <Bottom>
                     <LinkToDelete to="/my_page/delete_accounts">회원탈퇴 하기</LinkToDelete>
-                </Bottom>                                     
+                </Bottom>                                  
             </Section>
         </Body>
     )

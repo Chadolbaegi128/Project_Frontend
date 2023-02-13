@@ -14,17 +14,16 @@ const SliderContainer = styled.div`
 const Image = styled.img`
   width: 100%;
   height: 100%;
-  object-fit: fill;
   transition: all 1s ease-in-out; // doesn't work
 `;
 
 const ImageSlider = () => {
   const images = [
-    'https://picsum.photos/id/1/1920/300',
-    'https://picsum.photos/id/2/1920/300',
-    'https://picsum.photos/id/3/1920/300',
-    'https://picsum.photos/id/4/1920/300',
-    'https://picsum.photos/id/5/1920/300'
+    'https://picsum.photos/id/1/1920/500',
+    'https://picsum.photos/id/2/1920/500',
+    'https://picsum.photos/id/3/1920/500',
+    'https://picsum.photos/id/4/1920/500',
+    'https://picsum.photos/id/5/1920/500'
   ];
   
   const [index, setIndex] = useState(0);
@@ -37,7 +36,7 @@ const ImageSlider = () => {
     return () => {
       clearInterval(intervalId);
     };
-  }, [index]);
+  }, [index, images.length]);
 
   return (
     <SliderContainer>

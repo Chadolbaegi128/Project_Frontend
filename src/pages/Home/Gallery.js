@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom'
 
@@ -22,7 +22,8 @@ const ImageContainer = styled.div`
 
 const Image = styled.img`
     object-fit: contain;
-    width: auto;
+    width: 300px;
+    height: 300px;
 `;
 
 const ImageInfo = styled.div`
@@ -39,33 +40,29 @@ const GalleyName = styled.div`
     margin-top: 5em;
     font-size: 1.5rem;
     font-weight: bold;
-`
+`;
 
-const Gallery = () => {
-    const images = [
-        'https://picsum.photos/id/10/300',    
-        'https://picsum.photos/id/11/300',    
-        'https://picsum.photos/id/12/300',    
-        'https://picsum.photos/id/13/300',    
-        'https://picsum.photos/id/14/300',    
-        'https://picsum.photos/id/15/300',    
-        'https://picsum.photos/id/16/300',    
-        'https://picsum.photos/id/17/300',    
-        'https://picsum.photos/id/18/300'
-    ];
+function Gallery() {
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+    fetch('https://fakestoreapi.com/products?limit=9')
+        .then(response => response.json())
+        .then(data => setData(data));
+    }, []);
 
     return (
         <GalleryContainer>
             <GalleyName>BEST</GalleyName>
-            {images.map((image, index) => (
+            {data.map((data, index) => (
                 <ImageContainer key={index}>
-                    <NavLink to={`/detail/${index}`}><Image src={image} alt="gallery" /></NavLink>
-                    <ImageInfo>Product Name</ImageInfo>
-                    <ImageInfo>Price</ImageInfo>
+                    <NavLink to={`/detail/${index}`}><Image src={data.image} alt="gallery" /></NavLink>
+                    <ImageInfo>{data.title}</ImageInfo>
+                    <ImageInfo>{data.price}$</ImageInfo>
                 </ImageContainer>
             ))}
         </GalleryContainer>
-    );
+    )
 };
 
 export default Gallery;

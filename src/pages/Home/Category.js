@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom'
 
 const CategoryItems = styled.div`
     display: flex;
@@ -8,11 +9,12 @@ const CategoryItems = styled.div`
     margin-top: 2em;
 `;
 
-const CategoryItem = styled.a`
+const CategoryItem = styled.div`
     text-decoration: none;
     color: black;
     font-family: "Arial";
     font-size: 1rem;
+    cursor: pointer;
 
     &:hover {
     color: grey;
@@ -20,13 +22,25 @@ const CategoryItem = styled.a`
 `
 
 const Category = () => {
+  const navigate = useNavigate();
+  const [data, setData] = useState([]);
+
+  const CategoryItemClickHandler = () => {
+    return navigate('/');
+  }
+
+  useEffect(() => {
+    fetch('https://fakestoreapi.com/products/categories')
+      .then(response => response.json())
+      .then(data => setData(data));
+  }, []);
+
   return (
   <>
     <CategoryItems>
-        <CategoryItem href="#">OUTER</CategoryItem>
-        <CategoryItem href="#">TOP</CategoryItem>
-        <CategoryItem href="#">BOTTOM</CategoryItem>
-        <CategoryItem href="#">ACC</CategoryItem>
+        {data.map((category) => (
+          <CategoryItem onClick={CategoryItemClickHandler}>{category.toUpperCase()}</CategoryItem>
+        ))}
     </CategoryItems>
   </>
   )

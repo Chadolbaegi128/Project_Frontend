@@ -54,7 +54,7 @@ const CancelBtn = styled.button`
     }
 `
 
-const MypageUserOrderstatus = () => (
+const MyPageUserOrderstatus = () => (
     <>
         <MypageText>My Page</MypageText>
         <TableHeader>
@@ -72,4 +72,4 @@ const MypageUserOrderstatus = () => (
     </>
 );
 
-export default MypageUserOrderstatus;
+export default MyPageUserOrderstatus;

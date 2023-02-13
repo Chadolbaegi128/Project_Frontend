@@ -1,0 +1,1 @@
+export const ELICE_AUTH_TOKEN_KEY = 'ELICE_AUTH_TOKEN'

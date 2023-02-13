@@ -8,7 +8,7 @@ const Box = styled.div`
   width: 930px;
   background-color: none;
   border: 1px solid black;
-  margin: 70px auto; 
+  margin: 30px auto; 
   position: relative;
   flex-direction: column;
   align-items: center;
@@ -27,7 +27,6 @@ const Box = styled.div`
     margin-top: 50px;
   }  
 `
-
 const BtnGroup = styled.div`
   display: flex;
   flex-direction: column;
@@ -63,13 +62,19 @@ export default function OrderComplete({
   goshopping
 }) {
   return (
-    <Box>
-      <h1>{thx}</h1>
-      <h2>{text}</h2>
-      <BtnGroup>
-        <Button type='line'>{history}</Button>
-        <Button type='fill'>{goshopping}</Button>
-      </BtnGroup>
-    </Box>
+    <>
+      <Box>
+        <h1>{thx}</h1>
+        <h2>{text}</h2>
+        <BtnGroup>
+          <Link to='/my_page/order_list'>
+            <Button type='line'>{history}</Button>
+          </Link>
+          <Link to='/'>
+            <Button type='fill'>{goshopping}</Button>
+          </Link>
+        </BtnGroup>
+      </Box>
+    </>
   )
 }
