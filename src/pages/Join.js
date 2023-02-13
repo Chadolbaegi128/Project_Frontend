@@ -1,5 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { ELICE_AUTH_TOKEN_KEY } from "../constants/auth";
+import { getItem, setItem } from "../lib/localStorage";
+import { useSetRecoilState } from "recoil";
+import { useNavigate } from 'react-router-dom'
+
+import { $user } from "../store/user";
 
 const Body = styled.div`
     display: flex;
@@ -41,41 +47,9 @@ const Input = styled.input`
     border-width: 0 0 1px 0;
 `;
 
-const Address = styled.input`
-    position: relative;
-    left: 90px;
-    width: 36%;
-    padding: 5px;
-    margin-top: 5px;    
-    border-width: 1px;    
-`;
-
-const Address2 = styled.input`
-    position: relative;
-    left: 90px;
-    width: 55%;
-    padding: 5px;
-    margin-top: 5px;    
-    border-width: 1px;    
-`;
-
-const AddressButton = styled.button`
-    position: relative;
-    left: 90px;
-    top: 1px;
-    width: 20%;
-    padding: 4px 8px;
-    margin-left: 2px;
-    font-size: 14px;
-    background-color: white;
-    border-width: 1px; 
-    color: #bcbcbc;
-    cursor: pointer;
-`;
-
 const Button = styled.button`
     padding: 10px 120px;
-    margin-top: 20px;
+    margin-top: 30px;
     font-size: 16px;
     background-color: white;
     color: black;
@@ -97,17 +71,59 @@ styled.div`
 `
 
 const Join = () => {
-    const [name, setName] = useState("");
-    const [phone, setPhone] = useState("");
     const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [password, setPW] = useState("");
     const [confirm, setConfirm] = useState("");
+    const [name, setName] = useState("");
+    const [address, setAddress] = useState("");
+    const setUser = useSetRecoilState($user);
 
+    const navigate = useNavigate()
 
-    const handleSubmit = (event) => {
+    const handleSubmit = (event) =>{
         event.preventDefault();
         // Perform submit logic here
-    };
+
+        fetch("http://localhost:4000/api/auth/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                "fullName": name,
+                "email": email,
+                "password": password,
+                "address": address,
+            }),
+        })
+        .then( res => res.json())
+        .then( response => {
+            setItem(ELICE_AUTH_TOKEN_KEY, response.token)
+            window.location.reload()
+        })
+    }
+
+    useEffect(() => {
+        const savedToken = getItem(ELICE_AUTH_TOKEN_KEY);
+
+        // savedToken이 있으면 회원가입이 성공한 상태
+        if(savedToken){
+            //
+            fetch("http://localhost:4000/api/account/user", {
+                headers: {
+                    "authorization": `auth ${savedToken}`
+                }
+            })
+            .then( res => res.json())
+            .then( response => {
+                console.log(response)
+                console.log("^ user response")
+                if (response._id) {
+                    navigate('/', {replace: true})
+                }
+            })
+        }
+    }, [])
 
     return (
         <Body>
@@ -119,50 +135,42 @@ const Join = () => {
                         <Input
                             type="name"
                             value={name}
-                            onChange={event => setName(event.target.value)}
+                            onChange={ event => setName(event.target.value) }
                             placeholder="Name"
-                        />
-                        <Item>Phone Number</Item>
-                        <Input
-                            type="phone"
-                            value={phone}
-                            onChange={event => setPhone(event.target.value)}
-                            placeholder="010-1234-5678"
                         />
                         <Item>Email</Item>
                         <Input
-                            type="email"
+                            type="text"
                             value={email}
-                            onChange={event => setEmail(event.target.value)}
+                            onChange={ event => setEmail(event.target.value) }
                             placeholder="your@email.com"
                         />
                         <Item>Password</Item>
                         <Input
                             type="password"
                             value={password}
-                            onChange={event => setPassword(event.target.value)}
+                            onChange={ event => setPW(event.target.value) }
                             placeholder="Password"
                         />
                         <Item>Confirm Password</Item>
                         <Input
                             type="password"
                             value={confirm}
-                            onChange={event => setConfirm(event.target.value)}
-                            placeholder="Password"
+                            onChange={ event => setConfirm(event.target.value) }
+                            placeholder="Confirm Password"
                         />
                         <Item>Address</Item>
-                        <div>
-                            <Address
-                                type="address1"
-                                placeholder="주소 찾기를 클릭해주세요." />
-                            <AddressButton>주소 찾기</AddressButton>
-                            <Address2 type="address2" />
-                        </div>
-                        <Button type="submit">Join</Button>
+                            <Input
+                            type="address"
+                            name="address"
+                            value={address}
+                            onChange={ event => setAddress(event.target.value) }
+                            placeholder="Address"/>
+                    <Button type="submit">Join</Button>
                     </Form>
                 </Container>
             </Section>
-            
+
         </Body>
     );
 }

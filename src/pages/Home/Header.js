@@ -2,13 +2,15 @@ import React from 'react';
 import { motion } from "framer-motion";
 import styled from 'styled-components';
 import { NavLink, useNavigate } from 'react-router-dom'
-import { Outlet } from 'react-router-dom'
+import { useLoginUser } from '../../hooks/user.hook'
+import { removeItem } from '../../lib/localStorage'
+import { ELICE_AUTH_TOKEN_KEY } from '../../constants/auth'
 
 const Logo = styled.div`
-  font-size: 3rem;
+  font-size: 4rem;
   color: black;
   font-weight: bold;
-  font-family: "Arial";
+  font-family: 'Londrina Shadow';
   cursor: pointer;
 `;
 
@@ -41,17 +43,27 @@ const NavItem = styled.div`
 `;
 
 function Header() {
+  const {user} = useLoginUser()
   const navigate = useNavigate();
 
   const LogoClickHandler = () => {
     return navigate('/');
   }
 
+  const handleLogout = () => {
+    removeItem(ELICE_AUTH_TOKEN_KEY)
+    window.location.reload()
+  }
+
   return (
     <>
       <Navigation>
-          <NavLink to={`/login`} style={{textDecoration: 'none'}}><NavItem>Login</NavItem></NavLink>
-          <NavLink to={`/join`} style={{textDecoration: 'none'}}><NavItem>Join</NavItem></NavLink>
+        {
+
+          user === null &&  <NavLink to={`/login`} style={{textDecoration: 'none'}}><NavItem>Login</NavItem></NavLink>
+        }
+         { user === null &&  <NavLink to={`/join`} style={{textDecoration: 'none'}}><NavItem>Join</NavItem></NavLink>}
+          {user && user._id && <button onClick={() => handleLogout()}>Logout</button>}
           <NavLink to={`/order`} style={{textDecoration: 'none'}}><NavItem>Order</NavItem></NavLink>
           <NavLink to={`/cart`} style={{textDecoration: 'none'}}><NavItem>Cart</NavItem></NavLink>
       </Navigation>
@@ -66,7 +78,6 @@ function Header() {
           <Logo onClick={LogoClickHandler}>Shop N' Go</Logo>
         </motion.div>
       </LogoWrap>
-      <Outlet />
     </>
 )};
 

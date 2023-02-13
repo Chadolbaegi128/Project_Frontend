@@ -1,71 +1,55 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
-const Logo = styled.div`
-  font-size: 3rem;
-  margin: 0;
-  margin-top: 1em;
-  color: black;
-  font-weight: bold;
-  font-family: "Arial";
-  display: flex;
-  width: 100%;
-  justify-content: center;
-`;
+const MyPageText = styled.div`
+    width: 80%;
+    border-bottom: 1px solid lightgray;
+    margin-left: 10%;
+    margin-top: 3em;
+    font-family: Arial;
+    font-weight: bold;
+    font-size: 2rem;
+    padding: 0.3em;
+`
 
-const Navigation = styled.nav`
-  display: flex;
-  width: 100%;
-  justify-content: right;
-`;
+const WelcomeUser = styled.div`
+    width: 80%;
+    margin-left: 10%;
+    padding: 0.3em;
+    font-family: Arial;
+    font-size: 1.5rem;
+    margin-top: 0.5em;
+`
 
-const NavItem = styled.a`
-  margin-left: 20px;
-  color: #fff;
-  text-decoration: none;
-  color: black;
-
-  &:hover {
-    color: grey;
-  }
-`;
-
-const Menus = styled.div`
+const MyPageAdminNav = styled.nav`
     display: flex;
     justify-content: space-evenly;
-    margin-top: 2em;
-`;
-const Menu = styled(Link)`
+    margin-top: 7em;
+`
+const MyPageAdminNavItem = styled(NavLink)`
+    font-family: Arial;
+    font-size: 2rem;
     text-decoration: none;
     color: black;
-    font-family: "Arial";
-    font-size: 1rem;
-    margin-bottom: 5em;
 
     &:hover {
-    color: grey;
+    color: lightgray;
+    scale: 0.95;
+    transition: all 0.2s linear 0s;
     }
-    `
-
-
+`
 
 const MyPageAdminMain = () => (
-    <>
-        <Navigation>
-            <NavItem href="#">Logout</NavItem>
-            <NavItem href="#">Mypage</NavItem>
-            <NavItem href="#">Order</NavItem>
-        </Navigation>
-        <Logo>Shop N' Go</Logo>
-        <Menus>
-            <Menu to="/admin/admin_product">Product</Menu>
-            <Menu to="/admin/admin_category">Category</Menu>
-            <Menu to="/admin/admin_order">Order</Menu>
-        </Menus>
-    </>    
+  <>
+    <MyPageText>My Page</MyPageText>
+    <WelcomeUser>Welcome, <br /> Admin</WelcomeUser>
+    <MyPageAdminNav>
+      <MyPageAdminNavItem to="/admin/category">Category Edit</MyPageAdminNavItem>
+      <MyPageAdminNavItem to="/admin/product">Product Edit</MyPageAdminNavItem>
+      <MyPageAdminNavItem to="/admin/order">Orderstatus Edit</MyPageAdminNavItem>
+    </MyPageAdminNav>
+  </>    
 );
-
-
 
 export default MyPageAdminMain;

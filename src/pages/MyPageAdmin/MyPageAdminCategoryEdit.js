@@ -1,121 +1,112 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-
-const Maincategory = styled.a`
-font-family: "Arial";
-    font-size: 1.5rem;
-    display: flex;
-    justify-content: center;
-    margin-bottom: 3em;
-    font-weight: bold;
-`;
 
 const CategoryItems = styled.div`
   display: flex;
-  justify-content: space-evenly;
-  margin-top: 2em;
-`;
+  flex-direction: column;
+  align-items: center;
+`
 
-const CategoryItem = styled.a`
+const CategoryItem = styled.input`
   text-decoration: none;
   color: black;
   font-family: "Arial";
   font-size: 1rem;
-  
-    &:hover {
-    color: grey;
-    }
+  margin-top: 2em;
+  margin-right: 1em;
+  border: none;
+  border-bottom: 1px solid gray;
 `
-const CategoryMenus = styled.div`
-font-size: 1.2rem;
-  margin: 0;
-  margin-top: 1em;
-  color: black;
-  font-weight: bold;
-  font-family: "Arial";
+const CategoryEditMenus = styled.div`
+  margin: 3em;
+  margin-left: 25%;
   display: flex;
-  width: 100%;
-  justify-content: right;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
 `
 
-const CategoryMenu = styled.a`
-margin-right: 200px;
-  color: #fff;
-  text-decoration: none;
+const Btn = styled.button`
   color: black;
-    cursor: pointer;
-  &:hover {
-    color: grey;
-  }
-`
-const CategoryMenus2 = styled.div`
-font-size: 1.2rem;
-  margin: 0;
-  margin-top: 1em;
-  color: black;
-  font-weight: bold;
-  font-family: "Arial";
-  display: flex;
-  width: 100%;
-  justify-content: right;
-`
+  margin-right: 1em;
+  padding: 0 0.5em;
+  font-family: Arial;
+  font-size: 1rem;
+  background-color: transparent;
+  border: 1px solid black;
+  cursor: pointer;
 
-const CategoryMenu2 = styled.a`
-margin-right: 200px;
-  color: #fff;
-  text-decoration: none;
-  color: black;
-    cursor: pointer;
-  &:hover {
-    color: grey;
-  }
-`
-const CategoryMenus3 = styled.div`
-font-size: 1.2rem;
-  margin: 0;
-  margin-top: 1em;
-  color: black;
-  font-weight: bold;
-  font-family: "Arial";
-  display: flex;
-  width: 100%;
-  justify-content: right;
-`
-
-const CategoryMenu3 = styled.a`
-margin-right: 200px;
-  color: #fff;
-  text-decoration: none;
-  color: black;
-    cursor: pointer;
-  &:hover {
-    color: grey;
+  &:active {
+    box-shadow: inset -.3rem -.1rem 1rem  #FBFBFB, inset .3rem .4rem .8rem #BEC5D0;
   }
 `
 
+function MyPageAdminCategoryEdit() {
+  const [categoriesdata, setCategoriesdata] = useState([]);
+  const addCategoryInput = useRef();
+  const editCategoryInput = useRef([]);
 
-const MyPageAdminCategoryEdit = () => (
-    <>       
-      <Maincategory> Category </Maincategory>       
-        <CategoryItems>
-        <CategoryItem href="#">OUTER</CategoryItem>
-        <CategoryItem href="#">TOP</CategoryItem>
-        <CategoryItem href="#">BOTTOM</CategoryItem>
-        <CategoryItem href="#">ACC</CategoryItem>
-        </CategoryItems>
 
-        <CategoryMenus>
-        <CategoryMenu>수정</CategoryMenu>
-        </CategoryMenus>
-        <CategoryMenus2>
-        <CategoryMenu2>삭제</CategoryMenu2>
-        </CategoryMenus2>
-        <CategoryMenus3>
-        <CategoryMenu3>추가</CategoryMenu3>
-        </CategoryMenus3>
+  useEffect(() => {
+    fetch("http://localhost:4000/api/category")
+      .then(res => res.json())
+      .then(data => setCategoriesdata(data))
+  }, []);
 
-    </>
-    
-);
+  const DeleteBtnClickHandler = (categoryId) => {
+    fetch(`http://localhost:4000/api/category/${categoryId}`,{
+      method:"DELETE"
+    })
+  }
+
+  const AddBtnClickHandler = (e) => {
+    fetch('http://localhost:4000/api/category',{
+      method:"POST",
+      body: JSON.stringify({
+        categoryName: addCategoryInput.current.value
+      }),
+    })
+  }
+
+  const EditBtnClickHandler = (categoryId) => {
+    const newCategoryData = categoriesdata.find(category => category._id === categoryId)
+
+    fetch(`http://localhost:4000/api/category/${categoryId}`,{
+      method:"PUT",
+      body: JSON.stringify({
+        categoryName: newCategoryData.categoryName
+      }),
+    })
+  }
+
+  return(
+  <>
+    <div style={{display: 'flex', justifyContent: 'center', fontFamily: 'Arial', fontSize: '1.5rem', margin: '2em 0'}}>Category Edit</div>
+      <CategoryItems>
+        {categoriesdata.map((category, index) => (
+          <div key={category._id} style={{display:'flex'}}>
+            <CategoryItem onChange={(e) => {
+              const newCategoryData = [...categoriesdata]
+
+              newCategoryData[index].categoryName = e.target.value
+              setCategoriesdata(newCategoryData)
+            }} type='text' placeholder={category.categoryName} value={categoriesdata[index].categoryName}></CategoryItem>
+            <Btn style={{color: 'blue', marginTop: '1em'}} onClick={() => {
+              EditBtnClickHandler(category._id)
+            }}>Edit</Btn>
+            <Btn style={{color: 'red', marginTop: '1em'}} onClick={() => {
+              DeleteBtnClickHandler(category._id)
+            }}>Delete</Btn>
+          </div>
+        ))}
+      </CategoryItems>
+
+      <CategoryEditMenus>
+        <input ref={addCategoryInput} style={{marginRight: '1em'}} type='text'></input>
+        <Btn style={{padding: '0.3em'}}onClick={AddBtnClickHandler}>Add</Btn>
+      </CategoryEditMenus>
+  </>
+  )
+};
 
 export default MyPageAdminCategoryEdit;
