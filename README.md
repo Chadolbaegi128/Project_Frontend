@@ -1,5 +1,5 @@
-# My_Project_Frontend
-Repository for front-end of My_Project
+# Game_Shop Frontend
+Repository for front-end of Game_Shop
 
 ## Commit Guide
 - 제목
